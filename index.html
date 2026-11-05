@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#efe6d2" />
+  <title>The Last Fold — a paper-folding puzzle adventure</title>
+  <meta name="description" content="Bend a world made of paper. Swipe to fold, build bridges, ride the page, and find the golden stars in The Last Fold." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f4ecd9'/%3E%3Cpath d='M12 48 32 10l20 38-20-9z' fill='%23c76a3f'/%3E%3Cpath d='M32 10 22 39l10-6 10 6z' fill='%23f2e3c6'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.6l2.8 6.1 6.7.7-5 4.5 1.4 6.6-5.9-3.3-5.9 3.3 1.4-6.6-5-4.5 6.7-.7z"/></symbol>
+    <symbol id="i-fold" viewBox="0 0 24 24"><path d="M4 19.5 19.5 4M4 4l15.5 15.5M9 4h11v11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5 7.5 12l7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M19 8.5A7.5 7.5 0 1 0 19.4 15M19 4v5h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M8 6 3.8 10.2 8 14.4M4 10.2h8.6a6 6 0 0 1 0 12H9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9.5h3l4.5-3.7v12.4L7 14.5H4zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9.5h3l4.5-3.7v12.4L7 14.5H4zM16 9l5 5M21 9l-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.1" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6.5 18.5 12 13 17.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-lightbulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M8.4 14.5A6 6 0 1 1 15.6 14.5c-.8.7-1.1 1.4-1.1 2.5h-5c0-1.1-.3-1.8-1.1-2.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-swipe" viewBox="0 0 48 24"><path d="M5 12h30M27 5l8 7-8 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="5" cy="12" r="3.3" fill="currentColor"/></symbol>
+    <symbol id="i-fox" viewBox="0 0 64 64"><path d="M12 17 21 10l6 8 10-8 6 8 9-2-5 15-4 4 5 14-12-5-8 7-8-7-12 5 5-14-4-4z" fill="currentColor"/><path d="M23 33h6v4h-6zM35 33h6v4h-6z" fill="#f7efdc"/><path d="m28 45 4-4 4 4-4 3z" fill="#f7efdc"/></symbol>
+  </svg>
+
+  <div id="boot">
+    <div class="boot-mark"><svg viewBox="0 0 64 64" class="boot-fox"><use href="#i-fox"></use></svg></div>
+    <p class="boot-eyebrow">A paper-folding odyssey</p>
+    <h1>THE LAST FOLD</h1>
+    <div class="boot-bar"><span></span></div>
+    <p class="boot-note">folding the world…</p>
+  </div>
+
+  <canvas id="scene" aria-label="The Last Fold game world" role="img"></canvas>
+  <div id="paper-grain" aria-hidden="true"></div>
+  <div id="vignette" aria-hidden="true"></div>
+
+  <div id="ui">
+    <!-- MAIN MENU -->
+    <section id="screen-menu" class="screen screen-menu active" aria-label="Main menu">
+      <div class="topbar">
+        <div class="brand">
+          <span class="brand-mark"><svg viewBox="0 0 64 64"><use href="#i-fox"></use></svg></span>
+          <span class="brand-word">THE LAST FOLD</span>
+        </div>
+        <div class="topbar-right">
+          <span class="top-progress" id="menu-progress-chip"><svg class="icon"><use href="#i-star"></use></svg> 0 / 30</span>
+          <button class="icon-btn" id="menu-sound" aria-label="Toggle sound"><svg class="icon"><use href="#i-sound"></use></svg></button>
+        </div>
+      </div>
+
+      <div class="menu-main">
+        <div class="title-lockup">
+          <p class="eyebrow"><span class="eyebrow-line"></span>A paper-folding odyssey</p>
+          <h1 class="game-title">THE<br /><em>LAST</em> FOLD</h1>
+          <p class="lede">The world is paper.<br />Bend it until the path appears.</p>
+        </div>
+
+        <div class="menu-actions">
+          <button class="paper-btn primary" id="btn-play">
+            <span class="btn-label">Play</span>
+            <span class="btn-sub" id="btn-play-sub">Level 1 · First Crease</span>
+            <svg class="icon btn-arrow"><use href="#i-arrow"></use></svg>
+          </button>
+          <div class="menu-row">
+            <button class="paper-btn" id="btn-levels">Levels</button>
+            <button class="paper-btn" id="btn-skins">Skins</button>
+            <button class="paper-btn" id="btn-settings">Settings</button>
+          </div>
+          <div class="menu-progress">
+            <span id="menu-level-count">0 of 10 pages folded</span>
+            <span class="dot"></span>
+            <span id="menu-star-count">0 stars</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-foot">
+        <p>10 folds · 5 worlds · one last page</p>
+        <p class="menu-foot-note">Made of paper &amp; light</p>
+      </div>
+    </section>
+
+    <!-- LEVEL SELECT -->
+    <section id="screen-levels" class="screen sheet-screen" aria-label="Level selection">
+      <div class="sheet wide">
+        <div class="sheet-head">
+          <button class="icon-btn back" data-go="menu" aria-label="Back"><svg class="icon"><use href="#i-back"></use></svg></button>
+          <div>
+            <p class="sheet-eyebrow">The folded atlas</p>
+            <h2>Choose a page</h2>
+          </div>
+          <div class="sheet-head-right">
+            <span class="top-progress" id="levels-star-chip"><svg class="icon"><use href="#i-star"></use></svg> 0 / 30</span>
+          </div>
+        </div>
+        <div class="level-worlds" id="level-worlds"></div>
+      </div>
+    </section>
+
+    <!-- SKINS -->
+    <section id="screen-skins" class="screen sheet-screen" aria-label="Character skins">
+      <div class="sheet wide">
+        <div class="sheet-head">
+          <button class="icon-btn back" data-go="menu" aria-label="Back"><svg class="icon"><use href="#i-back"></use></svg></button>
+          <div>
+            <p class="sheet-eyebrow">Paper souls</p>
+            <h2>Choose your fold</h2>
+          </div>
+          <div class="sheet-head-right">
+            <span class="top-progress" id="skins-star-chip"><svg class="icon"><use href="#i-star"></use></svg> 0 / 30</span>
+          </div>
+        </div>
+        <div class="skin-grid" id="skin-grid"></div>
+        <p class="sheet-footnote">Collect golden stars and finish pages lightly to unlock new paper souls.</p>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="screen-settings" class="screen sheet-screen" aria-label="Settings">
+      <div class="sheet">
+        <div class="sheet-head">
+          <button class="icon-btn back" data-go="menu" aria-label="Back"><svg class="icon"><use href="#i-back"></use></svg></button>
+          <div>
+            <p class="sheet-eyebrow">The paper press</p>
+            <h2>Settings</h2>
+          </div>
+        </div>
+        <div class="settings-list">
+          <div class="setting-row">
+            <div><strong>Sound</strong><span>Paper rustles, creases and chimes.</span></div>
+            <button class="switch on" id="set-sound" role="switch" aria-checked="true"><span></span></button>
+          </div>
+          <div class="setting-row">
+            <div><strong>Gentle motion</strong><span>Reduce drifting dust and camera movement.</span></div>
+            <button class="switch" id="set-motion" role="switch" aria-checked="false"><span></span></button>
+          </div>
+          <div class="setting-row">
+            <div><strong>Graphics</strong><span>Auto picks the best balance for this device.</span></div>
+            <div class="segmented" id="set-quality">
+              <button data-quality="auto">Auto</button>
+              <button data-quality="high">High</button>
+              <button data-quality="lite">Lite</button>
+            </div>
+          </div>
+        </div>
+        <div class="how-card">
+          <h3>How to fold</h3>
+          <div class="how-steps">
+            <div><span class="how-num">1</span><p><strong>Tap paper to walk.</strong> Your little paper soul follows the tiles.</p></div>
+            <div><span class="how-num">2</span><p><strong>Swipe to fold.</strong> The crease appears where you press; the page behind your swipe comes with you.</p></div>
+            <div><span class="how-num">3</span><p><strong>Reach the glowing ring.</strong> Golden stars are hidden. Restart or undo a fold any time.</p></div>
+          </div>
+        </div>
+        <div class="settings-foot">
+          <button class="text-btn danger" id="btn-reset">Reset all progress</button>
+          <p>THE LAST FOLD · made for OMGithub</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAME -->
+    <section id="screen-game" class="screen screen-game" aria-label="Game">
+      <header class="hud">
+        <div class="hud-left">
+          <button class="icon-btn glass" id="btn-exit" aria-label="Back to levels"><svg class="icon"><use href="#i-back"></use></svg></button>
+          <div class="hud-title">
+            <span id="hud-world">Paper Forest</span>
+            <strong id="hud-level">First Crease</strong>
+          </div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-stat" title="Folds used"><svg class="icon"><use href="#i-fold"></use></svg><span id="hud-folds">0</span></div>
+          <div class="hud-stat" title="Golden stars"><svg class="icon gold"><use href="#i-star"></use></svg><span id="hud-stars">0/1</span></div>
+          <button class="icon-btn glass" id="btn-undo" aria-label="Undo last fold"><svg class="icon"><use href="#i-undo"></use></svg></button>
+          <button class="icon-btn glass" id="btn-restart" aria-label="Restart level"><svg class="icon"><use href="#i-restart"></use></svg></button>
+          <button class="icon-btn glass" id="btn-pause" aria-label="Pause"><svg class="icon"><use href="#i-pause"></use></svg></button>
+        </div>
+      </header>
+
+      <div id="fold-meter" aria-hidden="true">
+        <div class="fold-meter-label"><svg class="icon"><use href="#i-fold"></use></svg><span id="fold-meter-text">keep dragging to fold</span></div>
+        <div class="fold-meter-track"><span id="fold-meter-fill"></span></div>
+      </div>
+
+      <div id="gesture-hint">
+        <svg class="swipe-line" viewBox="0 0 48 24"><use href="#i-swipe"></use></svg>
+        <span>swipe from the fox across the gap</span>
+      </div>
+
+      <div id="hint-card">
+        <span class="hint-badge"><svg class="icon"><use href="#i-lightbulb"></use></svg></span>
+        <p id="hint-text">Tap a paper tile to walk. Swipe across the paper to fold it.</p>
+        <button id="btn-hint" aria-label="Show a hint">Hint</button>
+      </div>
+
+      <div id="hurt-flash" aria-hidden="true"></div>
+    </section>
+
+    <!-- PAUSE -->
+    <div class="overlay" id="pause-modal" aria-hidden="true">
+      <div class="modal-card small">
+        <p class="sheet-eyebrow">The page waits</p>
+        <h2>Paused</h2>
+        <div class="modal-actions">
+          <button class="paper-btn primary" id="btn-resume">Keep folding</button>
+          <button class="paper-btn" id="btn-pause-restart">Restart page</button>
+          <button class="paper-btn" id="btn-pause-levels">Level atlas</button>
+          <button class="text-btn" id="btn-pause-settings">Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WIN -->
+    <div class="overlay" id="win-modal" aria-hidden="true">
+      <div class="modal-card win-card">
+        <p class="sheet-eyebrow" id="win-eyebrow">Page complete</p>
+        <h2 id="win-title">Folded.</h2>
+        <div class="win-stars" id="win-stars">
+          <span class="win-star" data-star="complete"><svg><use href="#i-star"></use></svg><small>Complete</small></span>
+          <span class="win-star" data-star="golden"><svg><use href="#i-star"></use></svg><small>Golden</small></span>
+          <span class="win-star" data-star="grace"><svg><use href="#i-star"></use></svg><small>Light fold</small></span>
+        </div>
+        <p class="win-stats" id="win-stats">1 fold · 0 golden stars</p>
+        <div class="modal-actions row">
+          <button class="paper-btn primary" id="btn-next">Next page</button>
+          <button class="paper-btn" id="btn-replay">Replay</button>
+          <button class="text-btn" id="btn-win-levels">Level atlas</button>
+        </div>
+        <p class="win-quote" id="win-quote"></p>
+      </div>
+    </div>
+
+    <!-- CONFIRM -->
+    <div class="overlay" id="confirm-modal" aria-hidden="true">
+      <div class="modal-card small">
+        <p class="sheet-eyebrow">A clean sheet</p>
+        <h2>Reset everything?</h2>
+        <p class="modal-copy">All folded pages, golden stars and skins will return to blank paper. This cannot be undone.</p>
+        <div class="modal-actions row">
+          <button class="paper-btn primary" id="btn-confirm-reset">Reset</button>
+          <button class="paper-btn" id="btn-cancel-reset">Keep my folds</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="world-card" class="world-card" aria-hidden="true">
+      <span id="world-card-chapter">Chapter I</span>
+      <h2 id="world-card-name">Paper Forest</h2>
+      <p id="world-card-tagline">Every journey begins with a single crease.</p>
+    </div>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <div id="veil" aria-hidden="true"></div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
