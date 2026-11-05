@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#ffc22e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="description" content="Honeymoon Hive — a cosy 3D honey-making simulator. Fill jars, grow your swarm, unlock strange islands and rebirth the royal hive." />
+    <title>Honeymoon Hive</title>
+    <script type="module" crossorigin src="/assets/index-CRj3tiJJ.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CJ1aHjKw.css">
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene" aria-label="A floating island with a beehive and a giant honey jar"></canvas>
+      <div class="scene-wash"></div>
+
+      <header class="hud" id="hud">
+        <div class="wallet-card" id="walletCard">
+          <div class="wallet-row">
+            <span class="honey-medallion" data-icon="drop" aria-hidden="true"></span>
+            <div class="wallet-numbers">
+              <span class="eyebrow">HONEY</span>
+              <div class="amount-line">
+                <strong id="walletAmount">0</strong>
+                <span class="rate" id="honeyRate">+2/s</span>
+              </div>
+            </div>
+          </div>
+          <div class="jar-line">
+            <span class="jar-label">JAR</span>
+            <div class="jar-track"><i id="jarBar"></i></div>
+            <span id="jarPercent">0%</span>
+          </div>
+        </div>
+
+        <div class="hud-actions">
+          <button id="zoneChip" class="zone-chip" aria-label="Open zones">
+            <span class="zone-orb" id="zoneOrb" data-icon="flower" aria-hidden="true"></span>
+            <span class="zone-text"><small>ZONE</small><b id="zoneName">Clover Meadow</b></span>
+            <span class="zone-mult" id="zoneMult">×1</span>
+          </button>
+          <button id="soundBtn" class="icon-btn" aria-label="Toggle sound" aria-pressed="true"></button>
+        </div>
+      </header>
+
+      <div class="rebirth-chip" id="rebirthChip" hidden>
+        <span class="royal-dot" aria-hidden="true"></span>
+        <span><b id="jellyChip">0</b> royal jelly</span>
+        <em id="rebirthChipMult">+0%</em>
+      </div>
+
+      <div class="hint-bar" id="hintBar" hidden>
+        <span class="hint-icon" data-icon="drop" aria-hidden="true"></span>
+        <span id="hintText">Your bees fill the jar automatically. Tap STORE when it is ready!</span>
+        <button id="hintClose" aria-label="Dismiss hint">×</button>
+      </div>
+
+      <main class="dock" id="dock">
+        <button class="dock-btn" id="zonesBtn" aria-label="Open zones">
+          <span class="dock-icon" data-icon="compass" aria-hidden="true"></span>
+          <span>Zones</span>
+          <i class="dock-dot" id="zonesDot" hidden></i>
+        </button>
+
+        <button class="store-btn" id="collectBtn" aria-label="Store honey from the jar">
+          <span class="store-ring" id="storeRing">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle class="ring-bg" cx="24" cy="24" r="20"></circle>
+              <circle class="ring-fill" id="ringProgress" cx="24" cy="24" r="20"></circle>
+            </svg>
+            <span class="ring-icon" data-icon="jar" aria-hidden="true"></span>
+          </span>
+          <span class="store-copy">
+            <small id="collectKicker">JAR 0%</small>
+            <b id="collectLabel">STORE HONEY</b>
+            <em id="collectValue">+0</em>
+          </span>
+          <span class="store-shine" aria-hidden="true"></span>
+        </button>
+
+        <button class="dock-btn" id="shopBtn" aria-label="Open upgrades">
+          <span class="dock-icon" data-icon="tree" aria-hidden="true"></span>
+          <span>Upgrades</span>
+          <i class="dock-dot" id="shopDot" hidden></i>
+        </button>
+      </main>
+
+      <div class="toast-layer" id="toastLayer" aria-live="polite"></div>
+      <div class="float-layer" id="floatLayer" aria-hidden="true"></div>
+
+      <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-scrim" id="modalScrim"></div>
+        <section class="sheet" id="sheet">
+          <div class="sheet-grab" aria-hidden="true"></div>
+          <header class="sheet-head">
+            <div class="sheet-heading">
+              <span class="eyebrow">HONEYMOON HIVE</span>
+              <h2 id="sheetTitle">Upgrade Tree</h2>
+            </div>
+            <button class="icon-btn sheet-close" id="sheetClose" aria-label="Close menu" data-icon="close"></button>
+          </header>
+          <nav class="tabs" id="tabs" aria-label="Hive menu">
+            <button class="tab" data-tab="upgrades"><span>Upgrades</span></button>
+            <button class="tab" data-tab="bees"><span>Bees</span></button>
+            <button class="tab" data-tab="zones"><span>Zones</span></button>
+            <button class="tab" data-tab="rebirth"><span>Rebirth</span></button>
+          </nav>
+          <div class="sheet-body" id="sheetBody"></div>
+          <footer class="sheet-foot">
+            <button class="ghost-btn" id="helpLink">How to play</button>
+            <div class="foot-wallet">
+              <span data-icon="drop" aria-hidden="true"></span>
+              <b id="footWallet">0</b>
+            </div>
+            <button class="done-btn" id="doneBtn">Back to hive</button>
+          </footer>
+        </section>
+      </div>
+
+      <div class="zone-flash" id="zoneFlash">
+        <div class="zone-flash-inner">
+          <span class="zone-flash-kicker">TRAVELLING TO</span>
+          <strong id="zoneFlashName">Sunscorch Isle</strong>
+          <span class="zone-flash-line"></span>
+        </div>
+      </div>
+
+      <div class="rebirth-flash" id="rebirthFlash">
+        <div class="rebirth-burst"></div>
+        <div class="rebirth-words">
+          <small>THE HIVE IS REBORN</small>
+          <strong>ROYAL JELLY</strong>
+        </div>
+      </div>
+
+      <div class="webgl-error hidden" id="webglError">
+        <strong>This hive needs WebGL</strong>
+        <p>Please enable hardware acceleration or try a newer browser to visit the island.</p>
+      </div>
+    </div>
+  </body>
+</html>
