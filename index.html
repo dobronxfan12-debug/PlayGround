@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#080b0d" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23080b0d'/%3E%3Cpath d='M6 24V15h4v9H6zm8 0V9h4v15h-4zm8 0V4h4v20h-4z' fill='%23ff6a1a'/%3E%3C/svg%3E">
+<title>BLACKSITE: ZERO HOUR</title>
+<link rel="stylesheet" href="./styles.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/": "./vendor/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app">
+  <canvas id="game"></canvas>
+
+  <div id="hud" class="hidden">
+    <div class="hud-grain"></div>
+    <div class="hud-scan"></div>
+    <div id="damageVignette"></div>
+    <div id="lowHealth"></div>
+
+    <section class="mission panel">
+      <div class="mission-top">
+        <span class="live-dot"></span>
+        <span>SECTOR 07 // BLACKSITE</span>
+        <span id="clock" class="clock">00:00</span>
+      </div>
+      <div class="objective-label">ACTIVE OBJECTIVE</div>
+      <div id="objectiveText" class="objective-text">ELIMINATE ALL HOSTILES</div>
+      <div class="wave-row">
+        <span id="waveLabel">WAVE 01 / 06</span>
+        <span id="threatLabel">THREATS 00</span>
+      </div>
+      <div class="wave-track"><div id="waveProgress"></div></div>
+    </section>
+
+    <div id="compassWrap" class="compass-wrap">
+      <canvas id="compass" width="560" height="54"></canvas>
+      <div class="compass-center"></div>
+    </div>
+
+    <section class="top-right">
+      <div class="score-panel panel">
+        <div class="score-item"><span>SCORE</span><strong id="score">000000</strong></div>
+        <div class="score-item"><span>KILLS</span><strong id="kills">00</strong></div>
+        <div class="score-item"><span>ACC</span><strong id="accuracy">0%</strong></div>
+      </div>
+      <div class="radar-panel panel">
+        <canvas id="radar" width="360" height="360"></canvas>
+        <div class="radar-label">PROXIMITY // 40M</div>
+      </div>
+      <div id="killFeed" class="kill-feed"></div>
+    </section>
+
+    <section class="health-panel panel">
+      <div class="callsign">SPECTRE-1 <span>// VANGUARD</span></div>
+      <div class="health-line">
+        <div class="health-icon">+</div>
+        <div class="health-main">
+          <strong id="healthVal">100</strong>
+          <div class="bar health-bar"><div id="healthFill"></div></div>
+        </div>
+        <div class="armor-main">
+          <span>ARMOR</span>
+          <strong id="armorVal">75</strong>
+          <div class="bar armor-bar"><div id="armorFill"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ammo-panel panel">
+      <div id="weaponName" class="weapon-name">M4A1 // VANGUARD</div>
+      <div class="ammo-line">
+        <span id="magVal" class="mag">30</span>
+        <span class="slash">/</span>
+        <span id="reserveVal" class="reserve">180</span>
+      </div>
+      <div class="ammo-meta">
+        <span id="fireMode">AUTO</span>
+        <span id="grenadeVal">FRAG x3</span>
+        <span id="reloadState">READY</span>
+      </div>
+    </section>
+
+    <section class="loadout">
+      <div class="slot active" data-slot="1"><b>1</b><span>M4A1</span></div>
+      <div class="slot" data-slot="2"><b>2</b><span>P226</span></div>
+      <div class="slot" data-slot="3"><b>G</b><span>FRAG</span></div>
+    </section>
+
+    <div id="reticle" class="reticle">
+      <i class="r-top"></i><i class="r-right"></i><i class="r-bottom"></i><i class="r-left"></i>
+      <span class="r-dot"></span>
+      <div id="hitmarker" class="hitmarker"><i></i><i></i><i></i><i></i></div>
+      <div id="damageArrow" class="damage-arrow"></div>
+    </div>
+
+    <div id="interactPrompt" class="interact-prompt hidden">PRESS <b>E</b> TO INTERACT</div>
+
+    <div id="waveBanner" class="wave-banner">
+      <div class="banner-kicker">INCOMING</div>
+      <div id="bannerTitle" class="banner-title">WAVE 01</div>
+      <div id="bannerSub" class="banner-sub">HOSTILE CONTACT // WEAPONS FREE</div>
+    </div>
+
+    <div id="eventFeed" class="event-feed"></div>
+    <div id="xpLayer" class="xp-layer"></div>
+
+    <div class="control-hint">
+      <span><b>WASD</b> MOVE</span><span><b>SHIFT</b> SPRINT</span><span><b>C</b> CROUCH</span>
+      <span><b>R</b> RELOAD</span><span><b>G</b> FRAG</span><span><b>M</b> AUDIO</span><span><b>ESC</b> PAUSE</span>
+    </div>
+
+    <div class="build-tag">VANGUARD ENGINE // BUILD 1.0.7</div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <div id="startScreen" class="screen start-screen">
+    <div class="menu-vignette"></div>
+    <div class="menu-grid"></div>
+    <div class="menu-top">
+      <div class="logo-mark"><span></span><span></span><span></span></div>
+      <div class="studio">VANGUARD <b>TACTICAL</b> SYSTEMS</div>
+      <div class="classification">// CLASSIFIED // LEVEL 5 CLEARANCE //</div>
+    </div>
+
+    <div class="menu-main">
+      <div class="eyebrow">OPERATION <span>DEAD SIGNAL</span></div>
+      <h1>BLACKSITE<span>:</span><br><em>ZERO HOUR</em></h1>
+      <p class="tagline">Sector 07 has gone dark. Six waves of hostile operatives are converging on the relay.<br>You are the only asset inside the wire. Hold the line until extraction.</p>
+      <div class="menu-actions">
+        <button id="startButton" aria-label="Start Game" class="deploy-button"><span>START GAME</span><i></i></button>
+        <button id="briefButton" class="ghost-button">MISSION BRIEF</button>
+      </div>
+      <div class="menu-stats">
+        <div><b>06</b><span>WAVES</span></div>
+        <div><b>18+</b><span>HOSTILES</span></div>
+        <div><b>01</b><span>EXTRACTION</span></div>
+      </div>
+    </div>
+
+    <aside class="brief-panel">
+      <div class="brief-header"><span>MISSION PARAMETERS</span><b>07</b></div>
+      <div class="brief-row"><span>LOCATION</span><strong>BLACKSITE "ECHO"</strong></div>
+      <div class="brief-row"><span>TIME</span><strong>23:47 LOCAL</strong></div>
+      <div class="brief-row"><span>THREAT</span><strong class="danger">SEVERE</strong></div>
+      <div class="brief-row"><span>PRIMARY</span><strong>SURVIVE 6 WAVES</strong></div>
+      <div class="brief-note">Rules of engagement: weapons free. No reinforcements. No second chances.</div>
+    </aside>
+
+    <div class="menu-footer">
+      <div class="controls-grid">
+        <span><b>W A S D</b> MOVE</span><span><b>MOUSE</b> AIM / FIRE</span><span><b>RMB</b> ADS</span>
+        <span><b>SHIFT</b> SPRINT</span><span><b>C</b> CROUCH</span><span><b>R</b> RELOAD</span>
+        <span><b>1 / 2</b> SWAP</span><span><b>G</b> GRENADE</span><span><b>ESC</b> PAUSE</span>
+      </div>
+      <div class="audio-note"><span class="pulse"></span> AUDIO RECOMMENDED // HEADPHONES</div>
+    </div>
+    <div id="briefModal" class="brief-modal hidden">
+      <div class="brief-modal-inner">
+        <div class="brief-modal-kicker">MISSION BRIEF // OP DEAD SIGNAL</div>
+        <h2>HOLD THE BLACKSITE</h2>
+        <p>Enemy command has deployed six assault waves against the relay station. Use the compound's cover, manage your ammunition, and break the assault before the Warden reaches the relay.</p>
+        <ul>
+          <li><b>01</b> Clear every hostile in a wave to trigger the next assault.</li>
+          <li><b>02</b> Headshots deal triple damage. Armor absorbs incoming fire.</li>
+          <li><b>03</b> Survival restores health after five seconds out of contact.</li>
+          <li><b>04</b> Wave six is guarded by the WARDEN. Kill it to secure extraction.</li>
+        </ul>
+        <button id="briefClose" class="ghost-button">RETURN</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pauseScreen" class="screen pause-screen hidden">
+    <div class="pause-card">
+      <div class="menu-kicker">TACTICAL PAUSE</div>
+      <h2>MISSION SUSPENDED</h2>
+      <div class="pause-stats">
+        <div><span>SCORE</span><b id="pauseScore">0</b></div>
+        <div><span>KILLS</span><b id="pauseKills">0</b></div>
+        <div><span>WAVE</span><b id="pauseWave">1</b></div>
+      </div>
+      <button id="resumeButton" class="deploy-button"><span>RESUME</span><i></i></button>
+      <button id="quitButton" class="ghost-button">ABORT MISSION</button>
+      <div class="pause-hint">Click resume to re-engage mouse capture.</div>
+    </div>
+  </div>
+
+  <div id="endScreen" class="screen end-screen hidden">
+    <div class="end-card">
+      <div id="endKicker" class="menu-kicker">MISSION FAILED</div>
+      <h2 id="endTitle">KIA</h2>
+      <p id="endSub">The blacksite has fallen.</p>
+      <div class="end-stats">
+        <div><span>SCORE</span><b id="endScore">0</b></div>
+        <div><span>KILLS</span><b id="endKills">0</b></div>
+        <div><span>ACCURACY</span><b id="endAccuracy">0%</b></div>
+        <div><span>TIME</span><b id="endTime">00:00</b></div>
+      </div>
+      <div class="end-actions">
+        <button id="restartButton" class="deploy-button"><span>REDEPLOY</span><i></i></button>
+        <button id="menuButton" class="ghost-button">MAIN MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="touchControls" class="touch-controls hidden">
+    <div id="moveStick" class="move-stick"><span></span></div>
+    <div id="lookZone" class="look-zone"></div>
+    <button id="fireButton" class="fire-button">FIRE</button>
+    <button id="reloadButton" class="touch-small">RELOAD</button>
+    <button id="adsTouch" class="touch-small ads-touch">ADS</button>
+  </div>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
