@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#e8dcc5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="description" content="The Last Fold — a paper-folding puzzle adventure. Fold the world to find the way." />
+  <title>THE LAST FOLD</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f0e6d2'/%3E%3Cpath d='M10 46 30 12l8 22 16-8-12 28H14z' fill='%232f5d50'/%3E%3Cpath d='M30 12 38 34 20 46z' fill='%23c59333'/%3E%3C/svg%3E" />
+  <link rel="preload" href="assets/fraunces.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/nunito.woff2" as="font" type="font/woff2" crossorigin />
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.js" } }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="scene" aria-label="The Last Fold game world"></canvas>
+    <div id="grade"></div>
+    <div id="vignette"></div>
+    <div id="grain"></div>
+
+    <div id="ui">
+      <!-- ===================== MAIN MENU ===================== -->
+      <section id="screen-menu" class="screen is-active" data-screen="menu">
+        <header class="menu-head">
+          <div class="brand-stamp" aria-hidden="true">
+            <svg viewBox="0 0 44 44"><path d="M4 22 22 4l18 18-18 18z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 22 22 12l10 10-10 10z" fill="currentColor" opacity=".9"/></svg>
+          </div>
+          <button class="icon-btn sound-toggle" data-action="toggle-sound" aria-label="Toggle sound">
+            <svg class="ico-sound" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <svg class="ico-mute" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="m16 9 5 6m0-6-5 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button>
+        </header>
+
+        <div class="menu-hero">
+          <div class="eyebrow"><span class="rule"></span>A paper-folding adventure<span class="rule"></span></div>
+          <h1 class="game-title">THE<br /><em>LAST FOLD</em></h1>
+          <p class="tagline">The world is paper. <b>Fold it.</b></p>
+          <div class="menu-actions">
+            <button id="btn-play" class="paper-btn primary big" data-action="play">
+              <span class="btn-main">Continue</span>
+              <span class="btn-sub" id="continue-label">Level 1 · First Fold</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="menu-secondary">
+              <button class="text-btn" data-action="open-levels"><span class="tiny-icon">◈</span>Levels</button>
+              <button class="text-btn" data-action="open-skins"><span class="tiny-icon">✦</span>Skins</button>
+              <button class="text-btn" data-action="open-settings"><span class="tiny-icon">⚙</span>Settings</button>
+            </div>
+          </div>
+        </div>
+
+        <footer class="menu-foot">
+          <div class="chapter-chip"><i></i><span id="menu-chapter">Chapter I</span><b id="menu-world">Paper Forest</b></div>
+          <div class="star-chip"><span class="star-glyph">✦</span><span id="menu-stars">0</span><small>stars</small></div>
+        </footer>
+      </section>
+
+      <!-- ===================== LEVEL SELECT ===================== -->
+      <section id="screen-levels" class="screen overlay-screen" data-screen="levels">
+        <div class="sheet-panel levels-panel">
+          <header class="panel-head">
+            <button class="round-back" data-action="back-menu" aria-label="Back">
+              <svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div>
+              <p class="mini-eyebrow">The Folded Atlas</p>
+              <h2>Choose a fold</h2>
+            </div>
+            <div class="star-chip compact"><span class="star-glyph">✦</span><span id="levels-stars">0</span></div>
+          </header>
+          <div class="levels-scroll" id="levels-list"></div>
+          <footer class="panel-foot">
+            <span>Collect stars to unlock paper souls.</span>
+            <button class="text-btn small" data-action="open-skins">Skins →</button>
+          </footer>
+        </div>
+      </section>
+
+      <!-- ===================== SKINS ===================== -->
+      <section id="screen-skins" class="screen overlay-screen" data-screen="skins">
+        <div class="sheet-panel skins-panel">
+          <header class="panel-head">
+            <button class="round-back" data-action="back-menu" aria-label="Back">
+              <svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div>
+              <p class="mini-eyebrow">Paper Souls</p>
+              <h2>Who folds today?</h2>
+            </div>
+            <div class="star-chip compact"><span class="star-glyph">✦</span><span id="skins-stars">0</span></div>
+          </header>
+          <div class="skins-scroll">
+            <div class="skin-grid" id="skin-grid"></div>
+            <div class="palette-block">
+              <div class="palette-head">
+                <div><p class="mini-eyebrow">Ink & Light</p><h3>World palettes</h3></div>
+                <span class="lock-note" id="palette-note">Unlocked with levels</span>
+              </div>
+              <div class="palette-grid" id="palette-grid"></div>
+            </div>
+          </div>
+          <footer class="panel-foot"><span>Stars are hidden in every level. Fold carefully.</span></footer>
+        </div>
+      </section>
+
+      <!-- ===================== SETTINGS ===================== -->
+      <section id="screen-settings" class="screen overlay-screen" data-screen="settings">
+        <div class="sheet-panel settings-panel">
+          <header class="panel-head">
+            <button class="round-back" data-action="back-menu" aria-label="Back">
+              <svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div>
+              <p class="mini-eyebrow">The Workshop</p>
+              <h2>Settings</h2>
+            </div>
+          </header>
+          <div class="settings-scroll">
+            <div class="setting-row">
+              <div><b>Sound effects</b><small>Paper folds, chimes, footsteps</small></div>
+              <button class="switch" data-toggle="sfx" aria-label="Toggle sound effects"><span></span></button>
+            </div>
+            <div class="setting-row">
+              <div><b>Ambient music</b><small>A quiet tune for folded places</small></div>
+              <button class="switch" data-toggle="music" aria-label="Toggle music"><span></span></button>
+            </div>
+            <div class="setting-row">
+              <div><b>Haptics</b><small>Gentle taps on supported phones</small></div>
+              <button class="switch" data-toggle="haptics" aria-label="Toggle haptics"><span></span></button>
+            </div>
+            <div class="setting-row">
+              <div><b>Reduce motion</b><small>Calmer camera and particles</small></div>
+              <button class="switch" data-toggle="reduced" aria-label="Toggle reduced motion"><span></span></button>
+            </div>
+            <button class="wide-btn" data-action="how-to"><span>How to play</span><span>→</span></button>
+            <button class="wide-btn danger" data-action="reset-progress"><span>Reset progress</span><span>↺</span></button>
+            <p class="credits">THE LAST FOLD · a hand-folded prototype<br/>Made with paper, light &amp; three.js</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== GAME ===================== -->
+      <section id="screen-game" class="screen game-screen" data-screen="game">
+        <div class="hud-top">
+          <button class="hud-btn" data-action="pause" aria-label="Pause">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </button>
+          <div class="level-chip">
+            <span class="level-num" id="hud-level-num">01</span>
+            <span class="level-meta"><b id="hud-level-name">First Fold</b><small id="hud-chapter">Paper Forest</small></span>
+          </div>
+          <div class="hud-right">
+            <div class="hud-stars"><span class="star-glyph">✦</span><span id="hud-stars">0</span><small>/ 1</small></div>
+            <button class="hud-btn" data-action="restart" aria-label="Restart level">
+              <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2 6M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="tutorial-banner" class="tutorial-banner">
+          <span class="tut-icon" id="tut-icon">✦</span>
+          <div><b id="tut-title">The world is paper</b><span id="tut-text">Swipe along the glowing crease.</span></div>
+          <span class="tut-pulse"></span>
+        </div>
+
+        <div id="fold-gauge" class="fold-gauge">
+          <div class="gauge-top"><span>FOLD</span><b id="gauge-angle">0°</b></div>
+          <div class="gauge-track">
+            <i class="gauge-fill" id="gauge-fill"></i>
+            <span class="tick" style="left:0%"><b>0</b></span>
+            <span class="tick" style="left:25%"><b>45</b></span>
+            <span class="tick" style="left:50%"><b>90</b></span>
+            <span class="tick" style="left:75%"><b>135</b></span>
+            <span class="tick" style="left:100%"><b>180</b></span>
+          </div>
+          <div class="gauge-hint" id="gauge-hint">Drag up to fold · release to set</div>
+        </div>
+
+        <div id="crease-cancel" class="crease-cancel" data-action="clear-crease">✕ <span>clear crease</span></div>
+
+        <div class="joystick" id="joystick" aria-label="Movement joystick">
+          <div class="joy-ring"></div>
+          <div class="joy-knob" id="joy-knob"><span></span></div>
+          <p>MOVE</p>
+        </div>
+
+        <div class="hud-bottom-right">
+          <button class="hud-btn soft" data-action="hint" aria-label="Show hint">
+            <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2h5c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <div class="fold-legend" id="fold-legend">
+          <span class="legend-dot"></span>
+          <span><b>Swipe</b> a crease · <b>drag</b> a side to fold</span>
+        </div>
+      </section>
+
+      <!-- ===================== PAUSE ===================== -->
+      <section id="screen-pause" class="screen modal-screen" data-screen="pause">
+        <div class="modal-card pause-card">
+          <p class="mini-eyebrow">Take a breath</p>
+          <h2>Paused</h2>
+          <div class="modal-actions">
+            <button class="paper-btn primary" data-action="resume">Resume fold</button>
+            <button class="paper-btn ghost" data-action="restart">Restart level</button>
+            <button class="paper-btn ghost" data-action="open-settings-inpause">Settings</button>
+            <button class="text-btn" data-action="quit-menu">Leave to menu</button>
+          </div>
+          <div class="pause-mark">✦</div>
+        </div>
+      </section>
+
+      <!-- ===================== COMPLETE ===================== -->
+      <section id="screen-complete" class="screen modal-screen" data-screen="complete">
+        <div class="modal-card complete-card">
+          <div class="complete-burst" id="complete-burst"></div>
+          <p class="mini-eyebrow" id="complete-eyebrow">The fold holds</p>
+          <h2>Level complete</h2>
+          <div class="complete-stars" id="complete-stars"></div>
+          <div class="complete-stats">
+            <div><small>Time</small><b id="complete-time">0:00</b></div>
+            <div><small>Folds</small><b id="complete-folds">0</b></div>
+            <div><small>Stars</small><b id="complete-star-count">0</b></div>
+          </div>
+          <p class="complete-quote" id="complete-quote">Every ending is just another fold.</p>
+          <div class="modal-actions row">
+            <button class="paper-btn ghost" data-action="replay">Replay</button>
+            <button class="paper-btn primary" id="btn-next" data-action="next">Next fold</button>
+          </div>
+          <button class="text-btn small" data-action="quit-menu">Back to menu</button>
+        </div>
+      </section>
+
+      <!-- ===================== HOW TO PLAY ===================== -->
+      <section id="screen-howto" class="screen modal-screen" data-screen="howto">
+        <div class="modal-card howto-card">
+          <p class="mini-eyebrow">A field guide</p>
+          <h2>Fold the world</h2>
+          <div class="howto-steps">
+            <div class="howto-step"><span class="step-num">1</span><div><b>Swipe a crease</b><p>Drag along the paper. A glowing line appears where the world will bend.</p></div></div>
+            <div class="howto-step"><span class="step-num">2</span><div><b>Drag a side</b><p>Pull the paper upward. Release near 45°, 90° or 180° to set the fold.</p></div></div>
+            <div class="howto-step"><span class="step-num">3</span><div><b>Use the new shape</b><p>Ramps, walls and bridges are all the same paper — walk it, ride it, or undo it.</p></div></div>
+          </div>
+          <div class="howto-foot">
+            <span><i class="mini-joy"></i>Joystick to move</span>
+            <span><i class="mini-star">✦</i>Find hidden stars</span>
+          </div>
+          <button class="paper-btn primary wide" data-action="close-howto">Got it</button>
+        </div>
+      </section>
+
+      <!-- ===================== LOADING ===================== -->
+      <div id="loading" class="loading">
+        <div class="loading-fold">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <p>unfolding</p>
+      </div>
+
+      <div id="toast" class="toast"></div>
+      <div id="fade" class="fade"></div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
