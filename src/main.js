@@ -314,12 +314,26 @@ function requestLock() {
   } catch { /* drag-look fallback stays available */ }
 }
 
+function clearInputState() {
+  keys.clear();
+  weaponState.mouseDown = false;
+  weaponState.mouse2 = false;
+  player.vel.x = 0;
+  player.vel.z = 0;
+  player.sprinting = false;
+  state.dragging = false;
+  touchMove.x = 0;
+  touchMove.y = 0;
+  touchActive = false;
+  $('moveStick')?.querySelector('span')?.style.removeProperty('transform');
+  $('adsTouch')?.classList.remove('active');
+}
+
 function pauseGame() {
   if (state.mode !== 'playing') return;
   state.mode = 'paused';
   state.paused = true;
-  weaponState.mouseDown = false;
-  weaponState.mouse2 = false;
+  clearInputState();
   dom.pauseScreen.classList.remove('hidden');
   dom.pauseScore.textContent = String(state.score);
   dom.pauseKills.textContent = String(state.kills);
@@ -330,6 +344,7 @@ function pauseGame() {
 
 function resumeGame() {
   if (state.mode !== 'paused') return;
+  clearInputState();
   state.mode = 'playing';
   state.paused = false;
   dom.pauseScreen.classList.add('hidden');
@@ -420,8 +435,7 @@ function gameOver() {
   if (player.dead) return;
   player.dead = true;
   state.mode = 'ended';
-  weaponState.mouseDown = false;
-  weaponState.mouse2 = false;
+  clearInputState();
   if (document.pointerLockElement) document.exitPointerLock();
   audio.hurt();
   setTimeout(() => showEnd(false), 900);
@@ -430,8 +444,7 @@ function gameOver() {
 function startVictory() {
   if (state.mode !== 'playing') return;
   state.mode = 'ended';
-  weaponState.mouseDown = false;
-  weaponState.mouse2 = false;
+  clearInputState();
   if (document.pointerLockElement) document.exitPointerLock();
   setTimeout(() => showEnd(true), 1600);
 }
@@ -461,6 +474,7 @@ function formatTime(seconds) {
 const keys = new Set();
 
 window.addEventListener('keydown', (ev) => {
+  if (ev.repeat) return;
   if (ev.code === 'Escape') {
     if (state.mode === 'playing') { pauseGame(); ev.preventDefault(); return; }
     if (state.mode === 'paused') { resumeGame(); ev.preventDefault(); return; }
@@ -540,6 +554,12 @@ document.addEventListener('pointerlockchange', () => {
 
 document.addEventListener('pointerlockerror', () => {
   state.pointerLocked = false;
+});
+
+window.addEventListener('blur', clearInputState);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && state.mode === 'playing') pauseGame();
+  else if (document.hidden) clearInputState();
 });
 
 renderer.domElement.addEventListener('click', () => {
