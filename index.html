@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff9e9">
+  <title>Honey Empire — Build your hive</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐝%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Honey Empire home"><span class="brand-mark">✿</span><span>honey<span class="brand-light">empire</span></span></a>
+      <div class="profile-card"><div class="avatar">🐝</div><div><strong>Busy Bee</strong><small>Meadow keeper · Lv. <span id="level">1</span></small></div><span class="online-dot"></span></div>
+      <div class="nav-label">YOUR EMPIRE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-panel="home"><span>⌂</span>Overview</button>
+        <button class="nav-item" data-panel="bees"><span>🐝</span>Bee collection <b class="nav-count" id="bee-count">1</b></button>
+        <button class="nav-item" data-panel="upgrades"><span>✦</span>Upgrade tree</button>
+        <button class="nav-item" data-panel="worlds"><span>◉</span>Worlds</button>
+        <button class="nav-item" data-panel="quests"><span>⚑</span>Quests <i class="nav-new"></i></button>
+      </nav>
+      <div class="nav-label nav-label-lower">MORE TO EXPLORE</div>
+      <nav class="main-nav">
+        <button class="nav-item" data-panel="hatch"><span>🥚</span>Egg shop</button>
+        <button class="nav-item" data-panel="rebirth"><span>♛</span>Royal rebirth</button>
+        <button class="nav-item" data-panel="mastery"><span>❋</span>Honey mastery</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="event-mini"><div class="event-icon">✨</div><div><strong>Golden hour</strong><small id="event-copy">Next rush in 02:14</small></div><span class="event-spark">✦</span></div>
+        <button class="settings-link" id="settings-button">⚙ <span>Settings</span><span class="shortcut">⌘ ,</span></button>
+        <div class="sidebar-footer"><span class="tiny-bee">●</span> Your hive is buzzing</div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="breadcrumb"><span>My empire</span><b>/</b><strong>Starter Meadow</strong></div>
+        <div class="top-actions">
+          <div class="currency-pill honey-currency"><span class="currency-icon">🍯</span><div><small>HONEY</small><strong id="honey-balance">0</strong></div><button class="plus-button" data-panel="hatch" aria-label="Get more honey">+</button></div>
+          <div class="currency-pill coin-currency"><span class="currency-icon">🪙</span><div><small>COINS</small><strong id="coin-balance">0</strong></div></div>
+          <button class="round-button notification-button" aria-label="Notifications" id="notify-button">♧<i></i></button>
+        </div>
+      </header>
+
+      <section class="welcome-row"><div><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR LITTLE CORNER OF THE WORLD</div><h1>Good morning, <span>beekeeper!</span> <span class="wave">✦</span></h1><p>Your bees are hard at work. Let's make today <strong>golden.</strong></p></div><button class="daily-button" id="daily-button"><span class="daily-gift">🎁</span><span><b>Daily reward</b><small id="daily-copy">Claim today's gift</small></span><span class="daily-arrow">↗</span></button></section>
+
+      <div class="dashboard-grid">
+        <section class="world-card">
+          <div class="world-card-top"><div><span class="world-tag"><i></i> WORLD 01</span><h2>Starter Meadow</h2><p>A sunny place to put down roots.</p></div><button class="world-switch" data-panel="worlds">Change world <span>⌄</span></button></div>
+          <div class="meadow-scene" id="meadow-scene" aria-label="Animated bees flying over the Starter Meadow">
+            <div class="sun-halo"></div><div class="sun"></div><div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
+            <div class="distant-hill hill-back"></div><div class="distant-hill hill-front"></div>
+            <div class="meadow-flower flower-a"><i></i></div><div class="meadow-flower flower-b"><i></i></div><div class="meadow-flower flower-c"><i></i></div><div class="meadow-flower flower-d"><i></i></div><div class="meadow-flower flower-e"><i></i></div><div class="meadow-flower flower-f"><i></i></div><div class="meadow-flower flower-g"><i></i></div>
+            <div class="hive-house"><div class="hive-roof"></div><div class="hive-body"><div class="hive-stripe"></div><div class="hive-stripe"></div><div class="hive-door"></div></div><div class="hive-glow"></div></div>
+            <div class="bee bee-one"><span>🐝</span></div><div class="bee bee-two"><span>🐝</span></div><div class="bee bee-three"><span>🐝</span></div><div class="bee bee-four"><span>🐝</span></div><div class="bee bee-five"><span>🐝</span></div>
+            <div class="scene-label"><span class="live-dot"></span> LIVE MEADOW <span class="scene-weather">☀ 24°</span></div>
+            <div class="scene-caption"><span>✿</span> Clover blooms are thriving</div>
+            <div class="rush-overlay" id="rush-overlay"><span>✨ GOLDEN HONEY RUSH</span><small>3× bee production!</small></div>
+          </div>
+          <div class="world-stats"><div><span class="stat-icon pink">✿</span><span><b id="flower-count">24</b><small>Blooming flowers</small></span></div><div><span class="stat-icon blue">♧</span><span><b id="hps">0.8</b><small>Honey / second</small></span></div><div><span class="stat-icon orange">♨</span><span><b id="pollen-stat">0 / 30</b><small>Pollen collected</small></span></div><button class="collect-button" id="collect-button"><span>✦</span> Collect pollen <small>SPACE</small></button></div>
+        </section>
+
+        <section class="jar-card">
+          <div class="jar-card-head"><div><span class="section-kicker">YOUR ACTIVE JAR</span><h3 id="jar-name">Clover jar</h3></div><button class="more-button" id="jar-menu" aria-label="Jar options">•••</button></div>
+          <div class="jar-stage"><div class="jar-spark spark-one">✦</div><div class="jar-spark spark-two">✧</div><div class="jar-shadow"></div>
+            <div class="jar"><div class="jar-lid"><i></i><i></i><i></i></div><div class="jar-neck"></div><div class="jar-glass"><div class="jar-reflection"></div><div class="jar-liquid" id="jar-liquid"><div class="liquid-wave"></div><div class="bubble bubble-a"></div><div class="bubble bubble-b"></div><div class="bubble bubble-c"></div></div><div class="jar-label"><span>✿</span><b>CLOVER</b><small>PURE MEADOW</small></div><div class="jar-glint"></div></div></div>
+            <div class="pour-stream" id="pour-stream"></div><div class="pour-drop" id="pour-drop"></div>
+          </div>
+          <div class="jar-progress-line"><div><span>JAR FILL</span><b id="jar-amount">0 / 100</b></div><div class="progress-track"><i id="jar-progress"></i><span class="progress-shine"></span></div></div>
+          <div class="jar-footer"><div class="jar-value"><span>FULL JAR VALUE</span><b>🪙 <span id="jar-value">120</span></b></div><button class="sell-button" id="sell-button" disabled><span>Sell jar</span><b>↗</b></button></div>
+          <div class="jar-tip"><span>✧</span> A full jar earns <b>bonus coins!</b></div>
+        </section>
+      </div>
+
+      <section class="below-grid">
+        <div class="section-heading"><div><span class="section-kicker">KEEP GROWING</span><h2>Your empire at a glance</h2></div><button class="text-link" data-panel="upgrades">All upgrades <span>→</span></button></div>
+        <div class="empire-cards">
+          <button class="empire-card upgrade-card" data-panel="upgrades"><span class="card-icon upgrade-icon">↗</span><span class="card-copy"><small>PRODUCTION BOOST</small><b>Honey machine</b><em>Upgrade your output</em></span><span class="card-end">→</span><span class="card-corner">✦</span></button>
+          <button class="empire-card bee-card" data-panel="bees"><span class="card-icon bee-icon">🐝</span><span class="card-copy"><small>YOUR LITTLE HELPERS</small><b id="bee-card-title">1 busy bee</b><em>Meet your bee family</em></span><span class="card-end">→</span><span class="card-corner">✦</span></button>
+          <button class="empire-card quest-card" data-panel="quests"><span class="card-icon quest-icon">⚑</span><span class="card-copy"><small>DAILY ADVENTURE</small><b id="quest-card-title">A sticky start</b><em id="quest-card-sub">Earn 500 honey · 0 / 500</em></span><span class="card-end">→</span><span class="card-corner">✦</span></button>
+        </div>
+        <div class="milestone-strip"><div class="milestone-title"><span>🏆</span><div><b>Next milestone</b><small id="milestone-copy">Fill your first jar</small></div></div><div class="milestone-track"><i id="milestone-progress"></i></div><span class="milestone-count" id="milestone-count">0 / 1</span><button class="milestone-reward" data-panel="quests">View goals <span>→</span></button></div>
+      </section>
+      <footer class="page-footer"><span>HONEY EMPIRE <i>✿</i> Build a little joy.</span><span>Made with 🍯 and a lot of buzz.</span></footer>
+    </main>
+  </div>
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+  <div class="modal-backdrop" id="modal-backdrop"><section class="modal" id="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modal-close" aria-label="Close">×</button><div id="modal-content"></div></section></div>
+  <script src="game.js"></script>
+</body>
+</html>
